@@ -28,6 +28,9 @@ namespace SzinkeveroV2
         private void SzinKeveres()
         {
             rctTeglalap.Fill = new SolidColorBrush(Color.FromRgb(Convert.ToByte(sliPiros.Value), Convert.ToByte(sliZold.Value), Convert.ToByte(sliKek.Value)));
+            labRed.Content = Convert.ToByte(sliPiros.Value);
+            labGreen.Content = Convert.ToByte(sliZold.Value);
+            labBlue.Content = Convert.ToByte(sliKek.Value);
         }
 
         private void sliPiros_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -47,23 +50,43 @@ namespace SzinkeveroV2
 
         private void btnRogzit_Click(object sender, RoutedEventArgs e)
         {
-            lbSzinek.Items.Add((Convert.ToByte(sliPiros.Value), Convert.ToByte(sliZold.Value), Convert.ToByte(sliKek.Value)));
+            if (lbSzinek.Items.Contains($"{Convert.ToByte(sliPiros.Value)}; {Convert.ToByte(sliZold.Value)}; {Convert.ToByte(sliKek.Value)}"))
+            {
+                MessageBox.Show("Ilyen elem már létezik!");
+            }
+            else
+            {
+                lbSzinek.Items.Add($"{Convert.ToByte(sliPiros.Value)}; {Convert.ToByte(sliZold.Value)}; {Convert.ToByte(sliKek.Value)}");
+            }
         }
 
         private void btnTorol_Click(object sender, RoutedEventArgs e)
         {
-            lbSzinek.Items.RemoveAt(lbSzinek.SelectedIndex);
+            if (lbSzinek.SelectedIndex < 0)
+            {
+                MessageBox.Show("Válassz ki egy törlendő elemet!");
+            }
+            else
+            {
+                lbSzinek.Items.RemoveAt(lbSzinek.SelectedIndex);
+            }
         }
 
         private void btnUrit_Click(object sender, RoutedEventArgs e)
         {
             if (lbSzinek.Items.Count == 0)
             {
-                MessageBox.Show("Nincsenek elmek!");
+                MessageBox.Show("Nincsenek elemek!");
             }
             lbSzinek.Items.Clear();
         }
+
+        private void lbSzinek_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string[] szinek = lbSzinek.SelectedItem.ToString().Split(";");
+            sliPiros.Value = Convert.ToDouble(szinek[0]);
+            sliZold.Value = Convert.ToDouble(szinek[1]);
+            sliKek.Value = Convert.ToDouble(szinek[2]);
+        }
     }
-
-
 }
